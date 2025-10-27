@@ -7,7 +7,7 @@ https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.ht
 """
 
 import numpy as np
-from scipy.signal import spectrogram, medfilt
+from scipy.signal import welch, spectrogram, medfilt
 from scipy.fft import next_fast_len
 
 from neurodsp.utils.core import get_avg_func
@@ -137,9 +137,8 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
     return freqs, spectrum
 
 
-def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
-                           nperseg=None, noverlap=None, nfft=None,
-                           fast_len=False, f_range=None, outlier_percent=None):
+def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None,
+                           noverlap=None, nfft=None, f_range=None, outlier_percent=None):
     """Compute the power spectral density using Welch's method.
 
     Parameters
@@ -184,6 +183,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     Notes
     -----
     - Welch's method ([1]_) computes a power spectra by averaging over windowed FFTs.
+    - This function uses scipy.signal.welch to compute the Welch's estimate.
 
     References
     ----------
@@ -202,30 +202,12 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann',
     >>> freqs, spec = compute_spectrum_welch(sig, fs=500)
     """
 
-    # Calculate the short time Fourier transform with signal.spectrogram
     nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
 
-    # Pad signal if requested
-    if nfft is not None and nfft < nperseg:
-        raise ValueError('nfft must be greater than nperseg.')
-    elif nfft is not None:
-        npad = nfft - nperseg
-        noverlap = nperseg // 8 if noverlap is None else noverlap
-        sig, nperseg, noverlap = window_pad(sig, nperseg, noverlap, npad, fast_len)
-    elif fast_len:
-        nperseg = next_fast_len(nperseg)
+    freqs, spectrum = welch(sig, fs, window, nperseg, noverlap, nfft,
+                            detrend=False, return_onesided=True, scaling='density',
+                            average=avg_type)
 
-    # Compute spectrogram
-    freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap)
-
-    # Throw out outliers if indicated
-    if outlier_percent is not None:
-        spg = discard_outliers(spg, outlier_percent)
-
-    # Average across windows
-    spectrum = get_avg_func(avg_type)(spg, axis=-1)
-
-    # Trim spectrum, if requested
     if f_range:
         freqs, spectrum = trim_spectrum(freqs, spectrum, f_range)
 
