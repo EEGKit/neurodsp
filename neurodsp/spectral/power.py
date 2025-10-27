@@ -17,7 +17,7 @@ from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
 from neurodsp.spectral.utils import trim_spectrum
-from neurodsp.spectral.checks import check_spg_settings, check_mt_settings
+from neurodsp.spectral.checks import check_windowing_settings, check_mt_settings
 
 ###################################################################################################
 ###################################################################################################
@@ -200,7 +200,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None
     >>> freqs, spec = compute_spectrum_welch(sig, fs=500)
     """
 
-    nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
+    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
 
     freqs, spectrum = welch(sig, fs, window, nperseg, noverlap, nfft,
                             detrend=False, return_onesided=True, scaling='density',

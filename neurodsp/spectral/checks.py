@@ -3,7 +3,7 @@
 ###################################################################################################
 ###################################################################################################
 
-def check_spg_settings(fs, window, nperseg, noverlap):
+def check_windowing_settings(fs, window, nperseg, noverlap):
     """Check settings used for calculating spectrogram.
 
     Parameters
