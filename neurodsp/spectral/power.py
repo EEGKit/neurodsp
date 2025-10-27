@@ -71,8 +71,8 @@ def compute_spectrum(sig, fs, method='welch', **kwargs):
 
 
 SPECTRUM_INPUTS = {
-    'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', 'nfft', \
-               'fast_len', 'f_range', 'outlier_percent'],
+    'welch' : ['avg_type', 'window', 'nperseg', 'noverlap', \
+               'nfft', 'fast_len', 'f_range'],
     'wavelet' : ['freqs', 'avg_type', 'n_cycles', 'scaling', 'norm'],
     'medfilt' : ['filt_len', 'f_range'],
 }
@@ -138,7 +138,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
 
 def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None,
-                           noverlap=None, nfft=None, f_range=None, outlier_percent=None):
+                           noverlap=None, nfft=None, f_range=None):
     """Compute the power spectral density using Welch's method.
 
     Parameters
@@ -170,8 +170,6 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None
         See scipy.fft.next_fast_len for details.
     f_range : list of [float, float], optional
         Frequency range to sub-select from the power spectrum.
-    outlier_percent : float, optional
-        The percentage of outlier values to be removed. Must be between 0 and 100.
 
     Returns
     -------
