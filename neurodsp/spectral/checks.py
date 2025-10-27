@@ -1,10 +1,12 @@
 """Checker functions for neurodsp.spectral."""
 
+from scipy.fft import next_fast_len
+
 ###################################################################################################
 ###################################################################################################
 
-def check_spg_settings(fs, window, nperseg, noverlap):
-    """Check settings used for calculating spectrogram.
+def check_windowing_settings(fs, window, nperseg, noverlap, fast_len=False):
+    """Check settings used for defining windows.
 
     Parameters
     ----------
@@ -17,6 +19,9 @@ def check_spg_settings(fs, window, nperseg, noverlap):
         Length of each segment, in number of samples.
     noverlap : int or None
         Number of points to overlap between segments.
+    fast_len : bool, optional, default: False
+        If True, updates nperseg to the next fastest length to reduce computation time.
+        See scipy.fft.next_fast_len for details.
 
     Returns
     -------
@@ -35,8 +40,10 @@ def check_spg_settings(fs, window, nperseg, noverlap):
         # If the window is an array, defaults to window length
         else:
             nperseg = len(window)
-    else:
-        nperseg = int(nperseg)
+            assert not fast_len, "Cannot use fast_len if setting length to a defined window."
+
+    nperseg = int(nperseg)
+    nperseg = next_fast_len(nperseg)
 
     if noverlap is not None:
         noverlap = int(noverlap)
