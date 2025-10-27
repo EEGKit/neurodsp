@@ -86,25 +86,3 @@ def test_pad_signal():
     length = 6
     out4 = pad_signal(np.array([1, 2, 3]), length)
     assert len(out4) == length
-
-@pytest.mark.parametrize("fast_len", [True, False])
-def test_window_pad(fast_len):
-
-    nperseg = 100
-    noverlap = 10
-    npad = 1000
-
-    sig = np.random.rand(1000)
-
-    sig_windowed, _nperseg, _noverlap = window_pad(sig, nperseg, noverlap, npad, fast_len)
-
-    # Overlap was handled correctly b/w the first two windows
-    assert np.all(sig_windowed[npad:npad+nperseg][-noverlap:] ==
-        sig_windowed[(3*npad)+nperseg:(3*npad)+nperseg+noverlap])
-
-    # Updated nperseg has no remainder
-    nwin = (len(sig_windowed) / nperseg)
-    assert nwin == int(nwin)
-
-    # Ensure updated nperseg is correct
-    assert _nperseg == nperseg + npad

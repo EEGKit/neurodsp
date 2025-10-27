@@ -7,7 +7,7 @@ from neurodsp.utils import discard_outliers
 from neurodsp.utils.decorators import multidim
 from neurodsp.utils.checks import check_param_options
 from neurodsp.spectral.utils import trim_spectrum
-from neurodsp.spectral.checks import check_spg_settings
+from neurodsp.spectral.checks import check_windowing_settings
 
 ###################################################################################################
 ###################################################################################################
@@ -57,7 +57,7 @@ def compute_scv(sig, fs, window='hann', nperseg=None, noverlap=0, outlier_pct=No
     """
 
     # Compute spectrogram of data
-    nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
+    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap)
 
     if outlier_pct is not None:
@@ -134,7 +134,7 @@ def compute_scv_rs(sig, fs, window='hann', nperseg=None, noverlap=0,
     """
 
     check_param_options(method, 'method', ['bootstrap', 'rolling'])
-    nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
+    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
 
     # Compute spectrogram of data
     freqs, ts, spg = spectrogram(sig, fs, window, nperseg, noverlap)
@@ -229,7 +229,7 @@ def compute_spectral_hist(sig, fs, window='hann', nperseg=None, noverlap=None,
     """
 
     # Compute spectrogram of data
-    nperseg, noverlap = check_spg_settings(fs, window, nperseg, noverlap)
+    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
     freqs, _, spg = spectrogram(sig, fs, window, nperseg, noverlap, return_onesided=True)
 
     # Get log10 power & limit to frequency range of interest before binning
