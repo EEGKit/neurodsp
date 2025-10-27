@@ -16,7 +16,7 @@ from neurodsp.utils.decorators import multidim
 from neurodsp.utils.checks import check_param_options
 from neurodsp.utils.outliers import discard_outliers
 from neurodsp.timefrequency.wavelets import compute_wavelet_transform
-from neurodsp.spectral.utils import trim_spectrum, window_pad
+from neurodsp.spectral.utils import trim_spectrum
 from neurodsp.spectral.checks import check_spg_settings, check_mt_settings
 
 ###################################################################################################
