@@ -167,7 +167,7 @@ def get_positive_fft_outputs(freqs, powers=None, drop_zero=False):
         return freqs[start_ind:end_ind]
 
 
-def pad_signal(sig, length):
+def pad_signal(sig, length, fast_len=False):
     """Pad a signal to a desired length.
 
     Parameters
@@ -176,6 +176,9 @@ def pad_signal(sig, length):
         Signal to pad.
     length : int
         Output length to pad the signal to.
+    fast_len : bool, optional, default: False
+        If True, updates length to the next fastest length to reduce computation time.
+        See scipy.fft.next_fast_len for details.
 
     Returns
     -------
@@ -190,6 +193,8 @@ def pad_signal(sig, length):
     """
 
     if length > len(sig):
+        if fast_len:
+            length = next_fast_len(length)
         npad_total = length - len(sig)
         npad_left, npad_right = int(np.floor(npad_total / 2)), int(np.ceil(npad_total / 2))
         sig = np.pad(sig, (npad_left, npad_right), mode='constant', constant_values=0)
