@@ -8,7 +8,6 @@ https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.spectrogram.ht
 
 import numpy as np
 from scipy.signal import welch, spectrogram, medfilt
-from scipy.fft import next_fast_len
 
 from neurodsp.utils.core import get_avg_func
 from neurodsp.utils.data import create_freqs
@@ -138,7 +137,7 @@ def compute_spectrum_wavelet(sig, fs, freqs, avg_type='mean', **kwargs):
 
 
 def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None,
-                           noverlap=None, nfft=None, f_range=None):
+                           noverlap=None, nfft=None, fast_len=False, f_range=None):
     """Compute the power spectral density using Welch's method.
 
     Parameters
@@ -166,7 +165,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None
         Number of samples per window. Requires nfft > nperseg.
         Windows are zero-padded by the difference, nfft - nperseg.
     fast_len : bool, optional, default: False
-        Moves nperseg to the fastest length to reduce computation.
+        If True, updates nperseg to the next fastest length to reduce computation time.
         See scipy.fft.next_fast_len for details.
     f_range : list of [float, float], optional
         Frequency range to sub-select from the power spectrum.
@@ -200,7 +199,7 @@ def compute_spectrum_welch(sig, fs, avg_type='mean', window='hann', nperseg=None
     >>> freqs, spec = compute_spectrum_welch(sig, fs=500)
     """
 
-    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap)
+    nperseg, noverlap = check_windowing_settings(fs, window, nperseg, noverlap, fast_len)
 
     freqs, spectrum = welch(sig, fs, window, nperseg, noverlap, nfft,
                             detrend=False, return_onesided=True, scaling='density',

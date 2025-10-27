@@ -20,3 +20,7 @@ def test_check_windowing_settings():
     nperseg, noverlap_out = check_windowing_settings(FS, window, None, noverlap_in)
     assert nperseg == len(window)
     assert noverlap_out == noverlap_in
+
+    # Check next fast len
+    nperseg, noverlap = check_windowing_settings(FS, 'hann', 101, None, fast_len=True)
+    nperseg == 105
