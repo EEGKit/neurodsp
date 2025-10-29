@@ -526,3 +526,13 @@ Outliers
     remove_nans
     restore_nans
     discard_outliers
+
+Yielders
+~~~~~~~~
+
+.. currentmodule:: neurodsp.utils.yielders
+.. autosummary::
+    :toctree: generated/
+
+    step_over_time
+    step_over_signals
