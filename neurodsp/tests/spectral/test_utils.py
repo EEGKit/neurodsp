@@ -42,3 +42,25 @@ def test_trim_spectrogram():
     f_ext, t_ext, p_ext = trim_spectrogram(freqs, times, pows, f_range=[6, 8], t_range=None)
     assert_equal(f_ext, np.array([6, 7, 8]))
     assert_equal(t_ext, times)
+
+def test_pad_signal():
+
+    # Test case: odd length, even number added per side
+    length = 5
+    out1 = pad_signal(np.array([1, 2, 3]), length)
+    assert len(out1) == length
+
+    # Test case: even length, even number added per side
+    length = 6
+    out2 = pad_signal(np.array([1, 2]), length)
+    assert len(out2) == length
+
+    # Test case: odd length, uneven number added per side
+    length = 5
+    out3 = pad_signal(np.array([1, 2]), length)
+    assert len(out3) == length
+
+    # Test case: even length, uneven number added per side
+    length = 6
+    out4 = pad_signal(np.array([1, 2, 3]), length)
+    assert len(out4) == length

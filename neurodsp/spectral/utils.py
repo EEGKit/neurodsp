@@ -128,3 +128,38 @@ def trim_spectrogram(freqs, times, spg, f_range=None, t_range=None):
         times_ext = times
 
     return freqs_ext, times_ext, spg_ext
+
+
+def pad_signal(sig, length, fast_len=False):
+    """Pad a signal to a desired length.
+
+    Parameters
+    ----------
+    sig : 1d array
+        Signal to pad.
+    length : int
+        Output length to pad the signal to.
+    fast_len : bool, optional, default: False
+        If True, updates length to the next fastest length to reduce computation time.
+        See scipy.fft.next_fast_len for details.
+
+    Returns
+    -------
+    sig : 1d array
+        Padded signal.
+
+    Notes
+    -----
+    This approach pads the signal evenly on the left and right side with 0s.
+    If the padding length ends up being odd, this approach will split to padding to
+    have one less at the front / left side pad, and one more on the right / end side pad.
+    """
+
+    if length > len(sig):
+        if fast_len:
+            length = next_fast_len(length)
+        npad_total = length - len(sig)
+        npad_left, npad_right = int(np.floor(npad_total / 2)), int(np.ceil(npad_total / 2))
+        sig = np.pad(sig, (npad_left, npad_right), mode='constant', constant_values=0)
+
+    return sig

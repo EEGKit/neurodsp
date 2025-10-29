@@ -111,6 +111,7 @@ Spectral Power
     :toctree: generated/
 
     compute_spectrum
+    compute_spectrum_fft
     compute_spectrum_welch
     compute_spectrum_wavelet
     compute_spectrum_medfilt
