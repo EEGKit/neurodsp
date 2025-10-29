@@ -1,10 +1,10 @@
-"""Utilities, using yield, for iterating across / around signals."""
+"""Utilities that create yielders to iterate across signals."""
 
 ###################################################################################################
 ###################################################################################################
 
 def step_over_time(sig, start=0, size=100, step=1):
-    """Helper function to yield segments of a signal.
+    """Step across time segments of a signal.
 
     Parameters
     ----------
